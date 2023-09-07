@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:shopping_list_app/models/shopping_list_model.dart';
+import 'package:shopping_list_app/models/grocery_item.dart';
 
 class ListItem extends StatelessWidget {
   const ListItem({super.key, required this.currentObject});
 
-  final ShoppingModel currentObject;
+  final GroceryItem currentObject;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class ListItem extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 10, // Set the width
+            width: 30, // Set the width
             height: 20,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(2.0),

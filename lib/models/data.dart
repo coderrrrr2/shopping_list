@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:shopping_list_app/models/shopping_list_model.dart';
+import 'package:shopping_list_app/models/grocery_Item.dart';
 
-List<ShoppingModel> data = const [
-  ShoppingModel(
+List<GroceryItem> data = const [
+  GroceryItem(
     colorCode: Colors.blue,
     amount: 1,
     name: "Milk",
   ),
-  ShoppingModel(
+  GroceryItem(
     colorCode: Colors.green,
     amount: 5,
     name: "Bananas",
   ),
-  ShoppingModel(
+  GroceryItem(
     colorCode: Colors.orange,
     amount: 1,
     name: "Beef Steak",
