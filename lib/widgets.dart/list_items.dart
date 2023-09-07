@@ -13,7 +13,7 @@ class ListItem extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 20, // Set the width
+            width: 30, // Set the width
             height: 20,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(2.0),
