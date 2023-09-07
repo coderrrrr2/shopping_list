@@ -1,21 +1,14 @@
-import 'package:flutter/material.dart';
-
-enum Categories {
-  vegetables,
-  fruit,
-  meat,
-  dairy,
-  carbs,
-  sweets,
-  spices,
-  convenience,
-  hygiene,
-  other,
-}
+import 'package:shopping_list_app/models/category.dart';
 
 class GroceryItem {
-  const GroceryItem({required this.name, required this.color});
+  const GroceryItem(
+      {required this.id,
+      required this.name,
+      required this.category,
+      required this.amount});
 
-  final Color color;
   final String name;
+  final String id;
+  final int amount;
+  final Category category;
 }

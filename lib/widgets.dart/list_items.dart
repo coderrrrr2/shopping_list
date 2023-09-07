@@ -13,15 +13,15 @@ class ListItem extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 10, // Set the width
+            width: 20, // Set the width
             height: 20,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(2.0),
-              color: currentObject.colorCode,
+              color: currentObject.category.color,
             ),
           ),
           const SizedBox(
-            width: 10,
+            width: 15,
           ),
           Expanded(child: Text(currentObject.name)),
           Text(
