@@ -14,8 +14,8 @@ enum Categories {
 }
 
 class GroceryItem {
-  const GroceryItem({required this.category, required this.amount});
+  const GroceryItem({required this.name, required this.color});
 
-  final Categories category;
-  final int amount;
+  final Color color;
+  final String name;
 }
