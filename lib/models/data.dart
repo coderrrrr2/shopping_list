@@ -1,5 +1,5 @@
 import 'package:shopping_list_app/models/category.dart';
-import 'package:shopping_list_app/models/grocery_Item.dart';
+import 'package:shopping_list_app/models/grocery_item.dart';
 import 'package:shopping_list_app/models/categories.dart';
 
 List<GroceryItem> data = [

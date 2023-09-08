@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:shopping_list_app/models/category.dart';
 
 class GroceryItem {
