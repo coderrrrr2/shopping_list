@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_list_app/models/data.dart';
+import 'package:shopping_list_app/screens/new_items.dart';
 
 class StartScreen extends StatelessWidget {
   const StartScreen({super.key});
@@ -9,6 +10,12 @@ class StartScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Your groceries"),
+        actions: [
+          IconButton(
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => const NewItem())),
+              icon: const Icon(Icons.add))
+        ],
       ),
       body: ListView.builder(
           itemCount: data.length,
