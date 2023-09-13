@@ -47,7 +47,7 @@ class _StartScreenState extends State<StartScreen> {
             SnackBar(
               content: const Text("Item removed from list"),
               action: SnackBarAction(
-                label: "Undo",
+                label: "undo",
                 onPressed: () {
                   setState(
                     () {
