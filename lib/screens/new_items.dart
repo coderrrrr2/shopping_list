@@ -1,4 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
 import 'package:shopping_list_app/models/categories.dart';
 import 'package:shopping_list_app/models/category.dart';
 import 'package:shopping_list_app/models/grocery_item.dart';
@@ -15,17 +18,39 @@ class _NewItemState extends State<NewItem> {
   String enteredName = "";
   int enteredQuantity = 1;
   var selectedCategory = categories[Categories.vegetables]!;
+  var isSending = false;
 
-  void saveItem() {
+  void saveItem() async {
     if (formKey.currentState!.validate()) {
+      setState(() {
+        isSending = true;
+      });
       formKey.currentState!.save();
-      Navigator.of(context).pop(
-        GroceryItem(
-            id: DateTime.now().toString(),
-            name: enteredName,
-            category: selectedCategory,
-            amount: enteredQuantity),
+
+      final url = Uri.https("flutter-prep-416c7-default-rtdb.firebaseio.com",
+          'shopping-list.json');
+
+      final response = await http.post(
+        url,
+        headers: {'content-Type': 'application/json'},
+        body: json.encode(
+          {
+            "name": enteredName,
+            "category": selectedCategory.title,
+            "amount": enteredQuantity
+          },
+        ),
       );
+      final Map<String, dynamic> resData = json.decode(response.body);
+
+      if (!context.mounted) {
+        return;
+      }
+      Navigator.of(context).pop(GroceryItem(
+          id: resData["name"],
+          name: enteredName,
+          category: selectedCategory,
+          amount: enteredQuantity));
     }
   }
 
@@ -33,7 +58,9 @@ class _NewItemState extends State<NewItem> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add a new item"),
+        title: const Text(
+          "Add a new item",
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(9),
@@ -127,14 +154,22 @@ class _NewItemState extends State<NewItem> {
                 children: [
                   TextButton(
                     onPressed: () {
-                      formKey.currentState!.reset();
+                      isSending ? null : formKey.currentState!.reset();
                     },
                     child: const Text(
                       'Reset',
                     ),
                   ),
                   ElevatedButton(
-                      onPressed: saveItem, child: const Text('Add item'))
+                    onPressed: isSending ? null : saveItem,
+                    child: isSending
+                        ? const SizedBox(
+                            height: 16,
+                            width: 16,
+                            child: CircularProgressIndicator(),
+                          )
+                        : const Text('Add item'),
+                  )
                 ],
               )
             ],
