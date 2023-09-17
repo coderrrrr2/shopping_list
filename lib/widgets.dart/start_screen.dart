@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shopping_list_app/models/categories.dart';
@@ -27,41 +26,49 @@ class _StartScreenState extends State<StartScreen> {
   void loadItems() async {
     final url = Uri.https(
         "flutter-prep-416c7-default-rtdb.firebaseio.com", 'shopping-list.json');
-    final response = await http.get(url);
 
-    if (response.statusCode >= 400) {
+    try {
+      final response = await http.get(url);
+      if (response.statusCode >= 400) {
+        setState(
+          () {
+            error = "failed to fetch data, please try again later.";
+          },
+        );
+      }
+      if (response.body == "null") {
+        setState(() {
+          isloading = false;
+        });
+        return;
+      }
+      final Map<String, dynamic> listData = json.decode(response.body);
+      final List<GroceryItem> loadedItems = [];
+      for (final item in listData.entries) {
+        final category = categories.entries
+            .firstWhere(
+                (element) => element.value.title == item.value["category"])
+            .value;
+        loadedItems.add(
+          GroceryItem(
+            id: item.key,
+            name: item.value['name'],
+            category: category,
+            amount: item.value["amount"],
+          ),
+        );
+      }
       setState(
         () {
-          error = "failed to fetch data, please try again later.";
+          data = loadedItems;
+          isloading = false;
         },
       );
-    }
-    if (response.body == "null") {
+    } catch (errors) {
       setState(() {
-        isloading = false;
+        error = "something went wrong! Please try again later";
       });
-      return;
     }
-    final Map<String, dynamic> listData = json.decode(response.body);
-    final List<GroceryItem> loadedItems = [];
-    for (final item in listData.entries) {
-      final category = categories.entries
-          .firstWhere(
-              (element) => element.value.title == item.value["category"])
-          .value;
-      loadedItems.add(
-        GroceryItem(
-          id: item.key,
-          name: item.value['name'],
-          category: category,
-          amount: item.value["amount"],
-        ),
-      );
-    }
-    setState(() {
-      data = loadedItems;
-      isloading = false;
-    });
   }
 
   void addItem() async {
@@ -100,48 +107,41 @@ class _StartScreenState extends State<StartScreen> {
     setState(() {
       data.remove(item);
     });
-    final url = Uri.https("f", 'shopping-list/${item.id}.json');
+    final url = Uri.https("flutter-prep-416c7-default-rtdb.firebaseio.com",
+        'shopping-list/${item.id}.json');
     await http.delete(url);
   }
 
   @override
   Widget build(BuildContext context) {
-    late Widget currentScreen;
+    Widget currentScreen = Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Center(
+          child: Text(
+            "No Items in the List ",
+            style:
+                Theme.of(context).textTheme.titleLarge!.copyWith(fontSize: 40),
+          ),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Center(
+          child: Text(
+            "add some items to get started",
+            style:
+                Theme.of(context).textTheme.titleMedium!.copyWith(fontSize: 20),
+          ),
+        )
+      ],
+    );
 
     if (isloading) {
       currentScreen = const Center(
         child: CircularProgressIndicator(),
       );
     }
-    if (data.isEmpty) {
-      currentScreen = Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: Text(
-              "No Items in the List ",
-              style: Theme.of(context)
-                  .textTheme
-                  .titleLarge!
-                  .copyWith(fontSize: 40),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Center(
-            child: Text(
-              "add some items to get started",
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium!
-                  .copyWith(fontSize: 20),
-            ),
-          )
-        ],
-      );
-    }
-
     if (data.isNotEmpty) {
       setState(() {
         currentScreen = ListView.builder(
