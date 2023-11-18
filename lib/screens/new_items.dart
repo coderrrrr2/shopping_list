@@ -1,6 +1,5 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:shopping_list_app/apiDetails.dart';
 
 import 'package:shopping_list_app/models/categories.dart';
 import 'package:shopping_list_app/models/category.dart';
@@ -27,21 +26,8 @@ class _NewItemState extends State<NewItem> {
       });
       formKey.currentState!.save();
 
-      final url = Uri.https("flutter-prep-416c7-default-rtdb.firebaseio.com",
-          'shopping-list.json');
-
-      final response = await http.post(
-        url,
-        headers: {'content-Type': 'application/json'},
-        body: json.encode(
-          {
-            "name": enteredName,
-            "category": selectedCategory.title,
-            "amount": enteredQuantity
-          },
-        ),
-      );
-      final Map<String, dynamic> resData = json.decode(response.body);
+      final Map<String, dynamic> resData = await decodeResponse(
+          enteredName, selectedCategory.title, enteredQuantity);
 
       if (!context.mounted) {
         return;
